@@ -25,3 +25,6 @@ hs_err_pid*
 # folders
 .idea
 target
+
+# idea-related
+*.iml

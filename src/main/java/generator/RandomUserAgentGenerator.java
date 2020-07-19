@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+/**
+ * Random User Agent Generator class.
+ * */
 public class RandomUserAgentGenerator {
 
   private static final String USER_AGENT_FILE = "user-agents.txt";
@@ -39,6 +42,11 @@ public class RandomUserAgentGenerator {
     }
   }
 
+  /**
+   * Static method to fetch a random user agent as String.
+   * It randomly chooses a user agent from a list of 10.000.
+   * @return  random user agent as String
+   * */
   public static String getNext() {
     if (userAgents == null) {
       throw new UserAgentLoadingException("User agents cannot be loaded from file");

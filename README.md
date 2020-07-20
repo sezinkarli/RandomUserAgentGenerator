@@ -9,14 +9,25 @@ It can be used for implementing different kinds of web scraper.
 <dependency>
 	<groupId>com.sezinkarli</groupId>
 	<artifactId>random-user-agent-generator</artifactId>
-	<version>1.1</version>
+	<version>1.2</version>
 </dependency>
 ```
 
 ### How to use it
 
 It is quite straightforward to use it.
+For getting a random user agent (~30% chance of getting mobile so ~70% of getting non-mobile):
 ```
 String randomUserAgent = RandomUserAgentGenerator.getNext();
+```
+
+For specifically getting random mobile user agent:  
+```
+String randomMobileUserAgent = RandomUserAgentGenerator.getNextMobile();
+```
+
+For specifically getting random non-mobile user agent:  
+```
+String randomNonMobileUserAgent = RandomUserAgentGenerator.getNextNonMobile();
 ```
 

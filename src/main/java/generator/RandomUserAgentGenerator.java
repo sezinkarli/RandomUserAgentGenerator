@@ -15,21 +15,23 @@ import java.util.stream.Collectors;
  * */
 public class RandomUserAgentGenerator {
 
-  private static final String USER_AGENT_FILE = "user-agents.txt";
-  private static final int NUMBER_OF_PREDEFINED_USER_AGENTS = 10_000;
+  private static final String USER_AGENT_MOBILE_FILE = "user-agents-mobile.txt";
+  private static final String USER_AGENT_NON_MOBILE_FILE = "user-agents-non-mobile.txt";
 
-  private static Random random;
-  private static List<String> userAgents;
+  private static final Random random;
+  private static final List<String> mobileUserAgents;
+  private static final List<String> nonMobileUserAgents;
 
   private RandomUserAgentGenerator() {}
 
   static {
     random = new Random();
-    userAgents = loadUserAgents();
+    mobileUserAgents = loadUserAgentByFileName(USER_AGENT_MOBILE_FILE);
+    nonMobileUserAgents = loadUserAgentByFileName(USER_AGENT_NON_MOBILE_FILE);
   }
 
-  private static List<String> loadUserAgents() {
-    final InputStream inputStream = ClassLoader.getSystemResourceAsStream(USER_AGENT_FILE);
+  private static List<String> loadUserAgentByFileName(String fileName) {
+    final InputStream inputStream = ClassLoader.getSystemResourceAsStream(fileName);
 
     if (inputStream == null) {
       throw new UserAgentLoadingException("User agents cannot be loaded from file. InputStream is null");
@@ -43,18 +45,69 @@ public class RandomUserAgentGenerator {
   }
 
   /**
-   * Static method to fetch a random user agent as String.
-   * It randomly chooses a user agent from a list of 10.000.
-   * @return  random user agent as String
-   * */
+   * Static method to fetch a random user agent as String. It randomly chooses a user agent from a
+   * list of 10.000.
+   *
+   * @return random user agent as String
+   */
   public static String getNext() {
+    if (mobileUserAgents == null || nonMobileUserAgents == null) {
+      throw new UserAgentLoadingException("User agents cannot be loaded from file");
+    }
+
+    final int userAgentCount = getCombinedUserAgentCount();
+    final int randomIndex = random.nextInt(userAgentCount);
+
+    return getAgentBasedOnIndex(randomIndex);
+  }
+
+  private static int getCombinedUserAgentCount() {
+    return mobileUserAgents.size() + nonMobileUserAgents.size();
+  }
+
+  private static String getAgentBasedOnIndex(int randomIndex) {
+    if (isIndexInMobileInterval(randomIndex)) {
+      return mobileUserAgents.get(randomIndex);
+    }
+
+    return nonMobileUserAgents.get(getIndexForNonMobile(randomIndex));
+  }
+
+  private static int getIndexForNonMobile(int randomIndex) {
+    return randomIndex - mobileUserAgents.size();
+  }
+
+  private static boolean isIndexInMobileInterval(int randomIndex) {
+    return randomIndex < mobileUserAgents.size();
+  }
+
+  /**
+   * Static method to fetch a random mobile user agent as String. It randomly chooses a user agent
+   * from a list of 2.894 .
+   *
+   * @return random user agent as String
+   */
+  public static String getNextMobile() {
+    return getNextBasedOnAgentList(mobileUserAgents);
+  }
+
+  /**
+   * Static method to fetch a random nonmobile user agent as String. It randomly chooses a user
+   * agent from a list of 7.106 .
+   *
+   * @return random user agent as String
+   */
+  public static String getNextNonMobile() {
+    return getNextBasedOnAgentList(nonMobileUserAgents);
+  }
+
+  private static String getNextBasedOnAgentList(List<String> userAgents) {
     if (userAgents == null) {
       throw new UserAgentLoadingException("User agents cannot be loaded from file");
     }
-    return getRandomUserAgent();
-  }
 
-  private static String getRandomUserAgent() {
-    return userAgents.get(random.nextInt(NUMBER_OF_PREDEFINED_USER_AGENTS));
+    final int randomIndex = random.nextInt(userAgents.size());
+
+    return userAgents.get(randomIndex);
   }
 }

@@ -31,7 +31,7 @@ public class RandomUserAgentGenerator {
   }
 
   private static List<String> loadUserAgentByFileName(String fileName) {
-    final InputStream inputStream = ClassLoader.getSystemResourceAsStream(fileName);
+    final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 
     if (inputStream == null) {
       throw new UserAgentLoadingException("User agents cannot be loaded from file. InputStream is null");

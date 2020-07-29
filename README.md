@@ -9,7 +9,7 @@ It can be used for implementing different kinds of web scraper.
 <dependency>
 	<groupId>com.sezinkarli</groupId>
 	<artifactId>random-user-agent-generator</artifactId>
-	<version>1.2</version>
+	<version>1.3</version>
 </dependency>
 ```
 
